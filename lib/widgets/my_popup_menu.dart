@@ -42,9 +42,7 @@ class MyPopupMenu extends StatelessWidget {
                 EdgeInsetsDirectional.only(top: trianglePointerSize.height),
             child: Padding(
               padding: padding ?? const EdgeInsets.all(10),
-              child: Expanded(
-                child: child,
-              ),
+              child: child,
             ),
           ),
         ],
