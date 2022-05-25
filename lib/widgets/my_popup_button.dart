@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../helpers/global_key_helpers.dart';
@@ -34,10 +35,29 @@ class MyPopupIconButton extends StatefulWidget {
   State<MyPopupIconButton> createState() => _MyPopupIconButtonState();
 }
 
-class _MyPopupIconButtonState extends State<MyPopupIconButton> {
+class _MyPopupIconButtonState extends State<MyPopupIconButton>
+    with TickerProviderStateMixin {
   final GlobalKey myKey = GlobalKey();
+  late final AnimationController _controller;
 
   OverlayEntry? overlayEntry;
+  double opacity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _controller.addListener(update);
+  }
+
+  void update() {
+    setState(() {
+      opacity = _controller.value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,28 +85,45 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton> {
         final childPosition = myKey.getChildPosition(
             offset: widget.popupOffset,
             relativePosition: MyRelativePosition.bottomMiddle)!;
-        return Stack(
-          children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: _hideMenu,
-            ),
-            Positioned(
-              top: childPosition.dy,
-              left: childPosition.dx - widget.menuContent.size.width / 2,
-              child: widget.menuContent.build(context),
-            ),
-          ],
+        return AnimatedBuilder(
+          animation: _controller,
+          builder: (context, wdg) {
+            return Opacity(
+              opacity: opacity,
+              child: wdg,
+            );
+          },
+          child: Stack(
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: _hideMenu,
+              ),
+              Positioned(
+                top: childPosition.dy,
+                left: childPosition.dx - widget.menuContent.size.width / 2,
+                child: widget.menuContent.build(context),
+              ),
+            ],
+          ),
         );
       },
     );
 
     Overlay.of(context)!.insert(overlayEntry!);
+    _controller.forward();
   }
 
-  void _hideMenu() {
+  void _hideMenu() async {
     if (overlayEntry != null) {
+      await _controller.reverse().orCancel;
       overlayEntry!.remove();
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
