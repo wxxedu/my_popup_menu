@@ -1,7 +1,5 @@
 library my_popup_menu;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export './widgets/my_popup_menu.dart';
+export './widgets/my_popup_button.dart';
+export 'widgets/my_popup_painter.dart';
