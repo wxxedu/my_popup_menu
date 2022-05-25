@@ -25,6 +25,7 @@ N/A
 
 ## Usage
 
+Please see the examples folder.
 
 ## Additional information
 
