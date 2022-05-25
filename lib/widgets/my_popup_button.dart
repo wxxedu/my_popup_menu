@@ -1,4 +1,3 @@
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../helpers/global_key_helpers.dart';
@@ -6,6 +5,27 @@ import '../helpers/my_relative_position.dart';
 import 'my_popup_menu.dart';
 
 /// A [BlocBuilder] that displays a [PopupMenuButton]
+///
+/// [isSelected] is used to determine if the [PopupMenuButton] will perform switching action or show the menu. When [isSelected] is false, the [PopupMenuButton] will perform switching action. When [isSelected] is true, the [PopupMenuButton] will show the menu.
+///
+/// [menuContent] is a [MyPopupMenu] widget that will be displayed when the [PopupMenuButton] is pressed and the [isSelected] is true.
+///
+/// [selectedIcon] is the icon that will be displayed when [isSelected] is true.
+///
+/// [notSelectedIcon] is the icon that will be displayed when [isSelected] is false.
+///
+/// [selectedColor] is the color of the Icon when [isSelected] is true.
+///
+/// [notSelectedColor] is the color of the Icon when [isSelected] is false.
+///
+/// [padding] is the padding of the [PopupMenuButton].
+///
+///
+/// [trianglePointerSize] is the size of the triangle pointer section of the popup menu.
+///
+/// [elevation] is the elevation of the popup menu.
+///
+/// [onPressed] is the callback that will be called when the [PopupMenuButton] is pressed and when it is not in the [isSelected] state.
 class MyPopupIconButton extends StatefulWidget {
   const MyPopupIconButton({
     Key? key,
@@ -19,6 +39,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.padding,
     this.disabledColor,
     this.popupOffset = const Offset(0, 0),
+    this.animationDuration = const Duration(microseconds: 100),
   }) : super(key: key);
   final MyPopupMenu menuContent;
   final bool isSelected;
@@ -30,6 +51,7 @@ class MyPopupIconButton extends StatefulWidget {
   final Color? notSelectedColor;
   final Color? disabledColor;
   final EdgeInsets? padding;
+  final Duration animationDuration;
 
   @override
   State<MyPopupIconButton> createState() => _MyPopupIconButtonState();
@@ -48,7 +70,7 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: widget.animationDuration,
     );
     _controller.addListener(update);
   }

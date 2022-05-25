@@ -11,28 +11,21 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-This is a plugin to show popup menus (not just selectable items) in flutter. An example would be the 
+This is a plugin to show popup menus (not just selectable items) in flutter. Below is an example: 
+
+![](http://xiuxuan-1258282113.cos.ap-shanghai.myqcloud.com/2022-05-25-CleanShot%202022-05-25%20at%2020.27.41.png)
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Show the popup menu with the given size. 
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+N/A
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
-```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+N/A

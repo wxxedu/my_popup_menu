@@ -29,25 +29,14 @@ class ExampleHomePage extends StatelessWidget {
         title: MyPopupIconButton(
           isSelected: true,
           menuContent: const MyPopupMenu(
-            size: Size(100, 100),
+            size: Size(150, 200),
             child: Text("Hello World!"),
           ),
           selectedIcon: Icon(
-            PlatformIcons(context).addCircled,
+            PlatformIcons(context).book,
           ),
           notSelectedIcon: Icon(
-            PlatformIcons(context).add,
-          ),
-        ),
-      ),
-      body: Center(
-        child: CustomPaint(
-          size: const Size(100, 200),
-          painter: MyPopupPainter(
-            color: const Color(0xFFFFFFFF),
-            trianglePointerSize: const Size(20, 10),
-            cornerRadius: 10,
-            elevation: 10,
+            PlatformIcons(context).book,
           ),
         ),
       ),
