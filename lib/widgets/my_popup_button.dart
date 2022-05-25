@@ -39,7 +39,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.padding,
     this.disabledColor,
     this.popupOffset = const Offset(0, 0),
-    this.animationDuration = const Duration(microseconds: 100),
+    this.animationDuration = const Duration(milliseconds: 150),
   }) : super(key: key);
   final MyPopupMenu menuContent;
   final bool isSelected;
@@ -61,9 +61,8 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     with TickerProviderStateMixin {
   final GlobalKey myKey = GlobalKey();
   late final AnimationController _controller;
-
+  late final Animation<double> _animation;
   OverlayEntry? overlayEntry;
-  double opacity = 0;
 
   @override
   void initState() {
@@ -72,13 +71,14 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
       vsync: this,
       duration: widget.animationDuration,
     );
-    _controller.addListener(update);
-  }
-
-  void update() {
-    setState(() {
-      opacity = _controller.value;
-    });
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    )..addListener(
+        () {
+          setState(() {});
+        },
+      );
   }
 
   @override
@@ -107,33 +107,37 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
         final childPosition = myKey.getChildPosition(
             offset: widget.popupOffset,
             relativePosition: MyRelativePosition.bottomMiddle)!;
-        return AnimatedBuilder(
-          animation: _controller,
-          builder: (context, wdg) {
-            return Opacity(
-              opacity: opacity,
-              child: wdg,
-            );
-          },
-          child: Stack(
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: _hideMenu,
-              ),
-              Positioned(
-                top: childPosition.dy,
-                left: childPosition.dx - widget.menuContent.size.width / 2,
+        return Stack(
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: _hideMenu,
+            ),
+            Positioned(
+              top: childPosition.dy,
+              left: childPosition.dx - widget.menuContent.size.width / 2,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, wdg) {
+                  return FadeTransition(
+                    opacity: _animation,
+                    child: ScaleTransition(
+                      alignment: Alignment.topCenter,
+                      scale: _animation,
+                      child: wdg,
+                    ),
+                  );
+                },
                 child: widget.menuContent.build(context),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
 
     Overlay.of(context)!.insert(overlayEntry!);
-    _controller.forward();
+    _controller.forward().orCancel;
   }
 
   void _hideMenu() async {
@@ -141,6 +145,12 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
       await _controller.reverse().orCancel;
       overlayEntry!.remove();
     }
+  }
+
+  @override
+  void didUpdateWidget(MyPopupIconButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _controller.duration = widget.animationDuration;
   }
 
   @override
