@@ -1,8 +1,7 @@
+library my_popup_menu;
 
-import 'my_popup_menu_platform_interface.dart';
-
-class MyPopupMenu {
-  Future<String?> getPlatformVersion() {
-    return MyPopupMenuPlatform.instance.getPlatformVersion();
-  }
+/// A Calculator.
+class Calculator {
+  /// Returns [value] plus 1.
+  int addOne(int value) => value + 1;
 }
