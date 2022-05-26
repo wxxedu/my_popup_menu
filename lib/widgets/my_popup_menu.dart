@@ -44,6 +44,7 @@ class MyPopupMenu extends StatelessWidget {
             child: Padding(
               padding: padding ?? const EdgeInsets.all(12),
               child: Material(
+                color: color,
                 child: child,
               ),
             ),
