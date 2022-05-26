@@ -135,7 +135,7 @@ class MyPopupPainter extends CustomPainter {
 
     path.lineToPoint(point11);
 
-    canvas.drawShadow(path, Color(0x40000000), elevation, true);
+    canvas.drawShadow(path, const Color(0x40000000), elevation, true);
 
     canvas.drawPath(path, paint);
 

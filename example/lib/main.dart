@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:my_popup_menu/my_popup_menu.dart';
@@ -30,7 +31,7 @@ class ExampleHomePage extends StatelessWidget {
           isSelected: true,
           menuContent: const MyPopupMenu(
             size: Size(150, 200),
-            child: Text("Hello World!"),
+            child: Text("Hello"),
           ),
           selectedIcon: Icon(
             PlatformIcons(context).book,
