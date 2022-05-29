@@ -9,7 +9,7 @@ import 'my_popup_menu.dart';
 ///
 /// [isSelected] is used to determine if the [PopupMenuButton] will perform switching action or show the menu. When [isSelected] is false, the [PopupMenuButton] will perform switching action. When [isSelected] is true, the [PopupMenuButton] will show the menu.
 ///
-/// [menuContent] is a [MyPopupMenu] widget that will be displayed when the [PopupMenuButton] is pressed and the [isSelected] is true.
+/// [buildPopupMenu] is a [MyPopupMenu] widget that will be displayed when the [PopupMenuButton] is pressed and the [isSelected] is true.
 ///
 /// [selectedIcon] is the icon that will be displayed when [isSelected] is true.
 ///
@@ -31,7 +31,7 @@ class MyPopupIconButton extends StatefulWidget {
   const MyPopupIconButton({
     Key? key,
     required this.isSelected,
-    required this.menuContent,
+    required this.buildPopupMenu,
     this.onPressed,
     this.selectedIcon,
     this.notSelectedIcon,
@@ -42,7 +42,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.popupOffset = const Offset(0, 0),
     this.animationDuration = const Duration(milliseconds: 150),
   }) : super(key: key);
-  final MyPopupMenu menuContent;
+  final MyPopupMenu Function(BuildContext) buildPopupMenu;
   final bool isSelected;
   final Offset popupOffset;
   final void Function()? onPressed;
@@ -116,7 +116,8 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
             ),
             Positioned(
               top: childPosition.dy,
-              left: childPosition.dx - widget.menuContent.size.width / 2,
+              left: childPosition.dx -
+                  widget.buildPopupMenu(context).size.width / 2,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, wdg) {
@@ -129,7 +130,7 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
                     ),
                   );
                 },
-                child: widget.menuContent.build(context),
+                child: widget.buildPopupMenu(context),
               ),
             ),
           ],

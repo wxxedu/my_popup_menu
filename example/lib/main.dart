@@ -29,9 +29,9 @@ class ExampleHomePage extends StatelessWidget {
       appBar: PlatformAppBar(
         title: MyPopupIconButton(
           isSelected: true,
-          menuContent: const MyPopupMenu(
-            size: Size(150, 200),
-            child: Text("Hello"),
+          buildPopupMenu: (context) => const MyPopupMenu(
+            size: Size(200, 200),
+            child: Text('Hello World'),
           ),
           selectedIcon: Icon(
             PlatformIcons(context).book,

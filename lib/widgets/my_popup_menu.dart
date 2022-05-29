@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'my_popup_painter.dart';
 
 class MyPopupMenu extends StatelessWidget {
