@@ -116,7 +116,7 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
             ),
             Positioned(
               top: childPosition.dy,
-              left: childPosition.dx - widget.menuContent.size.width / 2,
+              left: childPosition.dx - widget.menuContent.initialSize.width / 2,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, wdg) {
