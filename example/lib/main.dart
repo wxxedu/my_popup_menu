@@ -21,8 +21,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ExampleHomePage extends StatelessWidget {
+class ExampleHomePage extends StatefulWidget {
   ExampleHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<ExampleHomePage> createState() => _ExampleHomePageState();
+}
+
+class _ExampleHomePageState extends State<ExampleHomePage> {
   final StreamController<Size> controller = StreamController<Size>.broadcast();
   @override
   Widget build(BuildContext context) {
@@ -33,16 +39,7 @@ class ExampleHomePage extends StatelessWidget {
             Expanded(child: Container()),
             MyPopupIconButton(
               isSelected: true,
-              menuContent: MyPopupMenu(
-                sizeController: controller,
-                initialSize: const Size(200, 300),
-                child: TextButton(
-                  child: Text("add Size"),
-                  onPressed: () {
-                    controller.add(Size(200, 800));
-                  },
-                ),
-              ),
+              menuContent: Text("Hello"),
               icon: Icon(
                 PlatformIcons(context).book,
               ),

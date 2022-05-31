@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:measure_size/measure_size.dart';
 import '../helpers/global_key_helpers.dart';
 import '../helpers/my_relative_position.dart';
 import 'my_popup_menu.dart';
@@ -40,9 +41,8 @@ class MyPopupIconButton extends StatefulWidget {
     this.disabledColor,
     this.popupOffset = const Offset(0, 0),
     this.animationDuration = const Duration(milliseconds: 150),
-    this.minEdgeDistance = 10,
   }) : super(key: key);
-  final MyPopupMenu? menuContent;
+  final Widget? menuContent;
   final bool isSelected;
   final Offset popupOffset;
   final void Function()? onPressed;
@@ -53,7 +53,6 @@ class MyPopupIconButton extends StatefulWidget {
   final Color? disabledColor;
   final EdgeInsets? padding;
   final Duration animationDuration;
-  final double minEdgeDistance;
 
   @override
   State<MyPopupIconButton> createState() => _MyPopupIconButtonState();
@@ -62,13 +61,17 @@ class MyPopupIconButton extends StatefulWidget {
 class _MyPopupIconButtonState extends State<MyPopupIconButton>
     with TickerProviderStateMixin {
   final GlobalKey myKey = GlobalKey();
+  final GlobalKey overlayKey = GlobalKey();
   late final AnimationController _controller;
   late final Animation<double> _animation;
-  OverlayEntry? overlayEntry;
 
+  OverlayEntry? overlayEntry;
+  Size size = Size.zero;
+  bool offstage = true;
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration,
@@ -81,6 +84,15 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
           setState(() {});
         },
       );
+
+    // calculate the size of the popup menu
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        await _showMenu();
+        await _hideMenu();
+        offstage = false;
+      },
+    );
   }
 
   @override
@@ -105,67 +117,62 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     }
   }
 
-  void _showMenu() {
+  Future<void> _showMenu() async {
     overlayEntry = OverlayEntry(
       builder: (context) {
         final childPosition = myKey.getChildPosition(
             offset: widget.popupOffset,
             relativePosition: MyRelativePosition.bottomMiddle)!;
-        final double screenWidth = MediaQuery.of(context).size.width;
-        late final double trianglePointerHorizontalOffset;
-        if (childPosition.dx < widget.menuContent!.initialSize.width / 2) {
-          trianglePointerHorizontalOffset =
-              widget.menuContent!.initialSize.width / 2 +
-                  widget.minEdgeDistance -
-                  childPosition.dx;
-        } else if (screenWidth <
-            childPosition.dx + widget.menuContent!.initialSize.width / 2) {
-          trianglePointerHorizontalOffset = screenWidth -
-              childPosition.dx -
-              widget.menuContent!.initialSize.width / 2 -
-              widget.minEdgeDistance;
-        } else {
-          trianglePointerHorizontalOffset = 0;
-        }
-        return Stack(
-          children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: _hideMenu,
-            ),
-            Positioned(
-              top: childPosition.dy,
-              left: childPosition.dx -
-                  widget.menuContent!.initialSize.width / 2 +
-                  trianglePointerHorizontalOffset,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, wdg) {
-                  return FadeTransition(
-                    opacity: _animation,
-                    child: ScaleTransition(
-                      alignment: Alignment.topCenter,
-                      scale: _animation,
-                      child: wdg,
+        final trianglePointerHorizontalOffset = _getHoriOffset(
+          childPosition: childPosition,
+          size: size,
+        );
+
+        return Offstage(
+          offstage: offstage,
+          child: Stack(
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: _hideMenu,
+              ),
+              Positioned(
+                top: childPosition.dy,
+                left: childPosition.dx -
+                    size.width / 2 +
+                    trianglePointerHorizontalOffset,
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, wdg) {
+                    return FadeTransition(
+                      opacity: _animation,
+                      child: ScaleTransition(
+                        alignment: Alignment.topCenter,
+                        scale: _animation,
+                        child: wdg,
+                      ),
+                    );
+                  },
+                  child: MeasureSize(
+                    onChange: _onSizeChanged,
+                    child: MyPopupMenu(
+                      horizontalOffset: -trianglePointerHorizontalOffset,
+                      child: widget.menuContent!,
                     ),
-                  );
-                },
-                child: widget.menuContent!.buildWithHorizontalOffset(
-                  context,
-                  -trianglePointerHorizontalOffset,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
 
     Overlay.of(context)!.insert(overlayEntry!);
-    _controller.forward().orCancel;
+    await _controller.forward().orCancel;
   }
 
-  void _hideMenu() async {
+  Future<void> _hideMenu() async {
     if (overlayEntry != null) {
       await _controller.reverse().orCancel;
       overlayEntry!.remove();
@@ -182,5 +189,25 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onSizeChanged(Size size) {
+    setState(() {
+      this.size = size;
+    });
+  }
+
+  double _getHoriOffset({
+    required Size size,
+    required Offset childPosition,
+  }) {
+    final windowWidth = MediaQuery.of(context).size.width;
+    if (childPosition.dx - (size.width / 2) < 0) {
+      return size.width / 2 - childPosition.dx;
+    } else if (childPosition.dx + (size.width / 2) > windowWidth) {
+      return windowWidth - childPosition.dx - (size.width / 2);
+    } else {
+      return 0;
+    }
   }
 }
