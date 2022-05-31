@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:my_popup_menu/my_popup_menu.dart';
 
@@ -29,24 +28,29 @@ class ExampleHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: MyPopupIconButton(
-          isSelected: true,
-          menuContent: MyPopupMenu(
-            sizeController: controller,
-            initialSize: const Size(200, 300),
-            child: TextButton(
-              child: Text("add Size"),
-              onPressed: () {
-                controller.add(Size(200, 800));
-              },
+        title: Row(
+          children: [
+            Expanded(child: Container()),
+            MyPopupIconButton(
+              isSelected: true,
+              menuContent: MyPopupMenu(
+                sizeController: controller,
+                initialSize: const Size(200, 300),
+                child: TextButton(
+                  child: Text("add Size"),
+                  onPressed: () {
+                    controller.add(Size(200, 800));
+                  },
+                ),
+              ),
+              icon: Icon(
+                PlatformIcons(context).book,
+              ),
+              notSelectedIcon: Icon(
+                PlatformIcons(context).book,
+              ),
             ),
-          ),
-          icon: Icon(
-            PlatformIcons(context).book,
-          ),
-          notSelectedIcon: Icon(
-            PlatformIcons(context).book,
-          ),
+          ],
         ),
       ),
     );

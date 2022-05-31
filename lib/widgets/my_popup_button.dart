@@ -40,6 +40,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.disabledColor,
     this.popupOffset = const Offset(0, 0),
     this.animationDuration = const Duration(milliseconds: 150),
+    this.minEdgeDistance = 10,
   }) : super(key: key);
   final MyPopupMenu? menuContent;
   final bool isSelected;
@@ -52,6 +53,7 @@ class MyPopupIconButton extends StatefulWidget {
   final Color? disabledColor;
   final EdgeInsets? padding;
   final Duration animationDuration;
+  final double minEdgeDistance;
 
   @override
   State<MyPopupIconButton> createState() => _MyPopupIconButtonState();
@@ -109,6 +111,22 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
         final childPosition = myKey.getChildPosition(
             offset: widget.popupOffset,
             relativePosition: MyRelativePosition.bottomMiddle)!;
+        final double screenWidth = MediaQuery.of(context).size.width;
+        late final double trianglePointerHorizontalOffset;
+        if (childPosition.dx < widget.menuContent!.initialSize.width / 2) {
+          trianglePointerHorizontalOffset =
+              widget.menuContent!.initialSize.width / 2 +
+                  widget.minEdgeDistance -
+                  childPosition.dx;
+        } else if (screenWidth <
+            childPosition.dx + widget.menuContent!.initialSize.width / 2) {
+          trianglePointerHorizontalOffset = screenWidth -
+              childPosition.dx -
+              widget.menuContent!.initialSize.width / 2 -
+              widget.minEdgeDistance;
+        } else {
+          trianglePointerHorizontalOffset = 0;
+        }
         return Stack(
           children: [
             GestureDetector(
@@ -117,8 +135,9 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
             ),
             Positioned(
               top: childPosition.dy,
-              left:
-                  childPosition.dx - widget.menuContent!.initialSize.width / 2,
+              left: childPosition.dx -
+                  widget.menuContent!.initialSize.width / 2 +
+                  trianglePointerHorizontalOffset,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, wdg) {
@@ -131,7 +150,10 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
                     ),
                   );
                 },
-                child: widget.menuContent!.build(context),
+                child: widget.menuContent!.buildWithHorizontalOffset(
+                  context,
+                  -trianglePointerHorizontalOffset,
+                ),
               ),
             ),
           ],

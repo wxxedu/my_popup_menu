@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'my_popup_painter.dart';
 
 class MyPopupMenu extends StatelessWidget {
@@ -26,8 +24,8 @@ class MyPopupMenu extends StatelessWidget {
   final Size trianglePointerSize;
   final double elevation;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildWithHorizontalOffset(
+      BuildContext context, double horizontalOffset) {
     return StreamBuilder<Size>(
         stream: sizeController.stream,
         builder: (context, snapshot) {
@@ -39,10 +37,12 @@ class MyPopupMenu extends StatelessWidget {
               children: [
                 CustomPaint(
                   painter: MyPopupPainter(
-                      color: color,
-                      cornerRadius: borderRadius,
-                      trianglePointerSize: trianglePointerSize,
-                      elevation: elevation),
+                    color: color,
+                    cornerRadius: borderRadius,
+                    trianglePointerSize: trianglePointerSize,
+                    elevation: elevation,
+                    trianglePointerHorizontalOffset: horizontalOffset,
+                  ),
                   size: snapshot.data ?? initialSize,
                 ),
                 Padding(
@@ -60,5 +60,10 @@ class MyPopupMenu extends StatelessWidget {
             ),
           );
         });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildWithHorizontalOffset(context, 0);
   }
 }

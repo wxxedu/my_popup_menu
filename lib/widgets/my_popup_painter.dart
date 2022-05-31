@@ -11,6 +11,7 @@ class MyPopupPainter extends CustomPainter {
     required this.cornerRadius,
     required this.color,
     required this.elevation,
+    this.trianglePointerHorizontalOffset = 0,
     this.border = const MyPopupMenuBorder(
       width: 0.5,
       color: Color.fromARGB(255, 232, 232, 232),
@@ -22,6 +23,7 @@ class MyPopupPainter extends CustomPainter {
   final Color color;
   final double elevation;
   final MyPopupMenuBorder border;
+  final double trianglePointerHorizontalOffset;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -45,23 +47,26 @@ class MyPopupPainter extends CustomPainter {
     path.lineToPoint(point1);
 
     final Offset point2 = Offset(
-      (size.width - trianglePointerSize.width) / 2,
-      trianglePointerSize.height,
-    );
+          (size.width - trianglePointerSize.width) / 2,
+          trianglePointerSize.height,
+        ) +
+        Offset(trianglePointerHorizontalOffset, 0);
 
     path.lineToPoint(point2);
 
     final Offset point3 = Offset(
-      size.width / 2,
-      0,
-    );
+          size.width / 2,
+          0,
+        ) +
+        Offset(trianglePointerHorizontalOffset, 0);
 
     path.lineToPoint(point3);
 
     final Offset point4 = Offset(
-      (size.width + trianglePointerSize.width) / 2,
-      trianglePointerSize.height,
-    );
+          (size.width + trianglePointerSize.width) / 2,
+          trianglePointerSize.height,
+        ) +
+        Offset(trianglePointerHorizontalOffset, 0);
 
     path.lineToPoint(point4);
 
