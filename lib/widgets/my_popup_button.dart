@@ -85,14 +85,16 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
         },
       );
 
-    // calculate the size of the popup menu
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) async {
-        await _showMenu();
-        await _hideMenu();
-        offstage = false;
-      },
-    );
+    if (widget.menuContent != null) {
+      // calculate the size of the popup menu
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) async {
+          await _showMenu();
+          await _hideMenu();
+          offstage = false;
+        },
+      );
+    }
   }
 
   @override
