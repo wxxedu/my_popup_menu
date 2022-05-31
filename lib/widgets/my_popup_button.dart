@@ -36,7 +36,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.notSelectedIcon,
     this.color,
     this.notSelectedColor,
-    this.padding,
+    this.padding = const EdgeInsets.all(0),
     this.disabledColor,
     this.popupOffset = const Offset(0, 0),
     this.animationDuration = const Duration(milliseconds: 150),
