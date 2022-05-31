@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../helpers/global_key_helpers.dart';
 import '../helpers/my_relative_position.dart';
@@ -31,7 +30,7 @@ class MyPopupIconButton extends StatefulWidget {
   const MyPopupIconButton({
     Key? key,
     required this.isSelected,
-    required this.menuContent,
+    this.menuContent,
     this.onPressed,
     this.selectedIcon,
     this.notSelectedIcon,
@@ -42,7 +41,7 @@ class MyPopupIconButton extends StatefulWidget {
     this.popupOffset = const Offset(0, 0),
     this.animationDuration = const Duration(milliseconds: 150),
   }) : super(key: key);
-  final MyPopupMenu menuContent;
+  final MyPopupMenu? menuContent;
   final bool isSelected;
   final Offset popupOffset;
   final void Function()? onPressed;
@@ -95,10 +94,10 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
   }
 
   void _onPressed(BuildContext context) {
-    if (widget.isSelected) {
+    if (widget.isSelected && widget.menuContent != null) {
       _showMenu();
     } else {
-      if (widget.onPressed != null) widget.onPressed!();
+      widget.onPressed?.call();
     }
   }
 
@@ -116,7 +115,8 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
             ),
             Positioned(
               top: childPosition.dy,
-              left: childPosition.dx - widget.menuContent.initialSize.width / 2,
+              left:
+                  childPosition.dx - widget.menuContent!.initialSize.width / 2,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, wdg) {
@@ -129,7 +129,7 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
                     ),
                   );
                 },
-                child: widget.menuContent.build(context),
+                child: widget.menuContent!.build(context),
               ),
             ),
           ],
