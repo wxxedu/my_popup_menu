@@ -41,7 +41,7 @@ class ExampleHomePage extends StatelessWidget {
               },
             ),
           ),
-          selectedIcon: Icon(
+          icon: Icon(
             PlatformIcons(context).book,
           ),
           notSelectedIcon: Icon(

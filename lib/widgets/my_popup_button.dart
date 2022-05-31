@@ -10,11 +10,11 @@ import 'my_popup_menu.dart';
 ///
 /// [menuContent] is a [MyPopupMenu] widget that will be displayed when the [PopupMenuButton] is pressed and the [isSelected] is true.
 ///
-/// [selectedIcon] is the icon that will be displayed when [isSelected] is true.
+/// [icon] is the icon that will be displayed when [isSelected] is true.
 ///
 /// [notSelectedIcon] is the icon that will be displayed when [isSelected] is false.
 ///
-/// [selectedColor] is the color of the Icon when [isSelected] is true.
+/// [color] is the color of the Icon when [isSelected] is true.
 ///
 /// [notSelectedColor] is the color of the Icon when [isSelected] is false.
 ///
@@ -30,11 +30,11 @@ class MyPopupIconButton extends StatefulWidget {
   const MyPopupIconButton({
     Key? key,
     required this.isSelected,
+    required this.icon,
     this.menuContent,
     this.onPressed,
-    this.selectedIcon,
     this.notSelectedIcon,
-    this.selectedColor,
+    this.color,
     this.notSelectedColor,
     this.padding,
     this.disabledColor,
@@ -45,9 +45,9 @@ class MyPopupIconButton extends StatefulWidget {
   final bool isSelected;
   final Offset popupOffset;
   final void Function()? onPressed;
-  final Widget? selectedIcon;
+  final Widget icon;
   final Widget? notSelectedIcon;
-  final Color? selectedColor;
+  final Color? color;
   final Color? notSelectedColor;
   final Color? disabledColor;
   final EdgeInsets? padding;
@@ -86,8 +86,10 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     return PlatformIconButton(
       key: myKey,
       onPressed: () => _onPressed(context),
-      icon: widget.isSelected ? widget.selectedIcon : widget.notSelectedIcon,
-      color: widget.isSelected ? widget.selectedColor : widget.notSelectedColor,
+      icon: widget.isSelected
+          ? widget.icon
+          : widget.notSelectedIcon ?? widget.icon,
+      color: widget.isSelected ? widget.color : widget.notSelectedColor,
       disabledColor: widget.disabledColor,
       padding: widget.padding,
     );
