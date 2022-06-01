@@ -123,8 +123,9 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     overlayEntry = OverlayEntry(
       builder: (context) {
         final childPosition = myKey.getChildPosition(
-            offset: widget.popupOffset,
-            relativePosition: MyRelativePosition.bottomMiddle)!;
+                offset: widget.popupOffset,
+                relativePosition: MyRelativePosition.bottomMiddle) ??
+            Offset.zero;
         final trianglePointerHorizontalOffset = _getHoriOffset(
           childPosition: childPosition,
           size: size,
