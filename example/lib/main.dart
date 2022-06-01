@@ -14,15 +14,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return PlatformApp(
+    return const PlatformApp(
       title: 'Flutter Demo',
       home: ExampleHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class ExampleHomePage extends StatefulWidget {
-  ExampleHomePage({Key? key}) : super(key: key);
+  const ExampleHomePage({Key? key}) : super(key: key);
 
   @override
   State<ExampleHomePage> createState() => _ExampleHomePageState();
@@ -39,13 +40,9 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             Expanded(child: Container()),
             MyPopupIconButton(
               isSelected: true,
-              menuContent: Column(
-                children: [
-                  Text("Hello World !!! This is very fun!"),
-                  Text("Hello World !!! This is very fun!"),
-                  Text("Hello World !!! This is very fun!"),
-                  Text("Hello World !!! This is very fun!"),
-                ],
+              menuContent: SizedBox(
+                width: 200,
+                height: 400,
               ),
               icon: Icon(
                 PlatformIcons(context).book,

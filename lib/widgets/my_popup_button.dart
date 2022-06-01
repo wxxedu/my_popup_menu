@@ -174,12 +174,12 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
     );
 
     Overlay.of(context)!.insert(overlayEntry!);
-    await _controller.forward().orCancel;
+    await _controller.forward();
   }
 
   Future<void> _hideMenu() async {
     if (overlayEntry != null) {
-      await _controller.reverse().orCancel;
+      await _controller.reverse();
       overlayEntry!.remove();
     }
   }
