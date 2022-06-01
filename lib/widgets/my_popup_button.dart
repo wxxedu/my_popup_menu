@@ -149,7 +149,10 @@ class _MyPopupIconButtonState extends State<MyPopupIconButton>
                     return FadeTransition(
                       opacity: _animation,
                       child: ScaleTransition(
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment(
+                          -trianglePointerHorizontalOffset / size.width,
+                          -1,
+                        ),
                         scale: _animation,
                         child: wdg,
                       ),

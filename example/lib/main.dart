@@ -39,7 +39,14 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             Expanded(child: Container()),
             MyPopupIconButton(
               isSelected: true,
-              menuContent: Text("Hello"),
+              menuContent: Column(
+                children: [
+                  Text("Hello World !!! This is very fun!"),
+                  Text("Hello World !!! This is very fun!"),
+                  Text("Hello World !!! This is very fun!"),
+                  Text("Hello World !!! This is very fun!"),
+                ],
+              ),
               icon: Icon(
                 PlatformIcons(context).book,
               ),
